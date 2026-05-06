@@ -1,94 +1,59 @@
 import sys #sys.exit()
 import random #random.choice()
 
-solved_centipede = [+1, +2, +3, +4, +5, +6, +7, +8, +9, +10, +11, +12] #define to-be state
-n = len(solved_centipede) #length of centipede, necessary for generation of valid moves (for scrambling), and validation of input moves
+class Centipede:
 
-def parse_move(move): #parses user input, extracts position (i) and direction (sign). outputs corresponding error message if it fails
-    move = move.strip().lower()
-    
-    if move == "quit":
-        sys.exit()
-    
-    if len(move) < 2:
-        raise ValueError("Too short. ")
+    def  __init__(self, length): #constructor
+        self.length = length
+        self.solved_centipede = list(range(1, length + 1))
+        self.current_centipede = self.solved_centipede.copy()
+        self.scramble()
 
-    try:
-        i = int(move[:-1]) - 1
-    except ValueError: 
-        raise ValueError("Not a valid index. ")
+    def start(self): #start messages
+        print(f"You must solve into: {self.solved_centipede}")
+        print(f"Your scrambled state is {self.current_centipede}")
         
-    sign = move[-1]
-    if sign not in "+-":
-        raise ValueError("Not a valid operator. ")
+    def generate(self): #generates possible moves
+        moves = []
+        for i in range(self.length):
+            if self.validate(i, "+"):
+                moves.append((i, "+"))
+            if self.validate(i, "-"):
+                moves.append((i, "-"))
+        return moves
     
-    return i, sign
+    def scramble(self): #scrambles using generated moves
+        for _ in range(self.length*self.length):
+            i, sign = random.choice(self.generate())
+            self. swap(i, sign)
 
-def validate_move(i, sign, n, silent =False): #checks whether move is legal, for both generated and input ones. outputs corresponding error message if it fails (only with user input)
-    if i < 0 or i >= n:
-        if not silent:
-            print("Illegal move; position not in bounds. ")
+    def permute(self, i, sign): #main puzzle mechanic
+        if self.validate(i, sign):
+            self.swap(i, sign)
+            print(f"Current state: {self.current_centipede}")
+            return True
         return False
 
-    if sign == "+" and i + 1 >= n:
-        if not silent:
-            print("Illegal move; right is an impossible direction for given position. ")
-        return False
+    def validate(self, i, sign): #validates moves (either generated or input ones)
+        if i < 0 or i >= self.length:
+            #print("Illegal move; position not in bounds. ") ~ possible error message (TBI)
+            return False
+        if sign == "+" and i + 1 >= self.length:
+            #print("Illegal move; right is an impossible direction for given position. ") ~ possible error message (TBI)
+            return False
+        if sign == "-" and i - 1 < 0:
+            #print("Illegal move; left is an impossible direction for given position. ") ~ possible error message (TBI)
+            return False
+        return True
 
-    if sign == "-" and i - 1 < 0:
-        if not silent:
-            print("Illegal move; left is an impossible direction for given position. ")
-        return False
-    return True
-
-def generate_moves(n): #generates valid moves for scrambling, using validation function
-    moves = []
-    for i in range(n):
-        if validate_move(i, "+", n, silent =True):
-            moves.append((i, "+"))
-        if validate_move(i, "-", n, silent=True):
-            moves.append((i, "-"))
-    return moves
-
-def scramble(solved_centipede, n): #scrambles centipede using generated moves
-   centipede = solved_centipede.copy()
-   for _ in range(n*n):
-        moves = generate_moves(n)
-        i, sign = random.choice(moves)
+    def swap(self, i, sign): #main puzzle logic. used for scrambling and solving
         if sign == "+":
-             swap_positive(centipede, i)
+            self.current_centipede[i], self.current_centipede[i+1]  = -self.current_centipede[i+1], -self.current_centipede[i]
         else:
-             swap_negative(centipede, i)
-        
-   return centipede
+            self.current_centipede[i], self.current_centipede[i-1]  = -self.current_centipede[i-1], -self.current_centipede[i]
+    
+    def check(self,x): #if solved, ends program
+        if self.current_centipede == self.solved_centipede:
+            print(f"Congratulations! You solved it in {x} moves!")
+            sys.exit()
 
-def swap_positive(centipede, i): #swapping function, positive (right) direction
-    centipede[i], centipede[i+1]  = -centipede[i+1], -centipede[i]
-
-def swap_negative(centipede, i): #swapping function, negative (left) direction
-    centipede[i], centipede[i-1]  = -centipede[i-1], -centipede[i]
-
-scrambled_centipede = scramble(solved_centipede, n) #define scrambled and current centipede
-current_centipede = scrambled_centipede.copy()
-
-print(f"You must solve into: {solved_centipede}") #display goal and scrambled centipede
-print(f"Your scrambled state is: {scrambled_centipede}")
-
-while True: #main loop
-    print(f"Current state: {current_centipede}")
-    move = input("Input move: ")
-    try:
-        i, sign = parse_move(move)
-    except ValueError as e:
-        print(f"Invalid Input: {e}")
-        continue
-    if validate_move(i, sign, n):
-        if sign == "+":
-            swap_positive(current_centipede, i)
-        else:
-            swap_negative(current_centipede, i)
-        if current_centipede == solved_centipede:
-            print(f"Congratulations! You solved it: {current_centipede}")
-            break
-    else:
-        continue
