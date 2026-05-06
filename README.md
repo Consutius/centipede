@@ -13,13 +13,13 @@ would look like:
 
 You must solve into: [1, 2, 3, 4]  
 Your scrambled state is: [-2, 4, 3, -1]  
-> Input move: 4-  
+Input move: 4-  
 Current state: [-2, 4, 1, -3]  
-> Input move: 2+  
+Input move: 2+  
 Current state: [-2, -1, -4, -3]  
-> Input move: 3+  
+Input move: 3+  
 Current state: [-2, -1, 3, 4]  
-> Input move: 2-  
+Input move: 2-  
 Current state: [1, 2, 3, 4]  
 Congratulations! You solved it in 4 moves!
 
