@@ -11,16 +11,16 @@ To solve it, you must input moves, those being very simple.
 All you have to do is input position (i) and direction (sign). Here's what an example solve 
 would look like:
 
-You must solve into: [1, 2, 3, 4]
-Your scrambled state is: [-2, 4, 3, -1]
-Input move: 4-
-Current state: [-2, 4, 1, -3]
-Input move: 2+
-Current state: [-2, -1, -4, -3]
-Input move: 3+
-Current state: [-2, -1, 3, 4]
-Input move: 2-
-Current state: [1, 2, 3, 4]
+You must solve into: [1, 2, 3, 4]  
+Your scrambled state is: [-2, 4, 3, -1]  
+> Input move: 4-  
+Current state: [-2, 4, 1, -3]  
+> Input move: 2+  
+Current state: [-2, -1, -4, -3]  
+> Input move: 3+  
+Current state: [-2, -1, 3, 4]  
+> Input move: 2-  
+Current state: [1, 2, 3, 4]  
 Congratulations! You solved it in 4 moves!
 
 I do realize that the sign flipping (what should've been parity) is a bit of a useless constraint
